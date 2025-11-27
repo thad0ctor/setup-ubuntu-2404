@@ -22,8 +22,11 @@ This package contains everything you need to recreate your Linux installation se
    - GNOME Extension Manager
    - GitHub Desktop (git GUI client)
    - Claude Code CLI (AI coding assistant)
+   - Visual Studio Code (code editor)
+   - Cursor (AI-powered code editor)
    - Flameshot (screenshot tool)
    - Discord (communication platform)
+   - Moonlight (game streaming client)
    - curl and wget (download utilities)
    - Sunshine (if sunshine.deb is present in this package)
 

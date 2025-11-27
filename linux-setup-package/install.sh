@@ -5,7 +5,7 @@
 # - Samba network drive mounts
 # - Windows NTFS drive mounts
 # - File manager bookmarks
-# - Essential applications (Remmina, VLC, Sunshine, Extension Manager)
+# - Essential applications (Remmina, VLC, VS Code, Cursor, Sunshine, Moonlight, Extension Manager)
 # - Nemo and Nautilus file managers with extensions
 # - GNOME Shell extensions
 # - Nemo context menu scripts
@@ -99,6 +99,15 @@ sudo apt install -y flameshot || print_warning "Failed to install Flameshot, con
 
 print_status "Installing Discord..."
 sudo snap install discord || print_warning "Failed to install Discord, continuing..."
+
+print_status "Installing Moonlight (game streaming client)..."
+sudo snap install moonlight || print_warning "Failed to install Moonlight, continuing..."
+
+print_status "Installing Visual Studio Code..."
+sudo snap install --classic code || print_warning "Failed to install VS Code, continuing..."
+
+print_status "Installing Cursor AI Editor..."
+curl -fsS https://cursor.com/install | bash || print_warning "Failed to install Cursor, continuing..."
 
 print_status "Installing CIFS utilities for Samba mounting..."
 sudo apt install -y cifs-utils || print_warning "Failed to install CIFS utilities, continuing..."
@@ -404,7 +413,7 @@ print_status "Installation complete!"
 echo ""
 print_success "Summary of what was configured:"
 echo "  ✓ File managers: Nemo and Nautilus with extensions"
-echo "  ✓ Applications: Remmina, VLC, Extension Manager, GitHub Desktop, Claude Code CLI, Flameshot, Discord"
+echo "  ✓ Applications: Remmina, VLC, Extension Manager, GitHub Desktop, Claude Code CLI, VS Code, Cursor, Flameshot, Discord, Moonlight"
 if [[ "$INSTALL_CUDA" =~ ^[Yy]$ ]]; then
 echo "  ✓ Development tools: gcc, cmake, build-essential"
 echo "  ✓ System monitoring: htop, nvtop"

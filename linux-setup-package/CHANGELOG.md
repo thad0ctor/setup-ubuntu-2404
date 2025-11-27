@@ -2,6 +2,27 @@
 
 All notable changes to this linux-setup-package.
 
+## [1.2.0] - 2025-11-26
+
+### Added
+- **Visual Studio Code** - Code editor
+  - Full-featured IDE with extensive extension support
+  - Installed via Snap (classic mode)
+
+- **Cursor** - AI-powered code editor
+  - Fork of VS Code with built-in AI capabilities
+  - Automatic installation via official install script
+
+- **Moonlight** - Game streaming client
+  - Stream games from Sunshine or other compatible servers
+  - Low-latency remote gaming experience
+  - Installed via Snap
+
+### Changed
+- Updated all documentation to reflect new applications
+- Enhanced error handling throughout install.sh
+- Script now continues on individual package failures
+
 ## [1.1.0] - 2025-11-26
 
 ### Added

@@ -66,7 +66,22 @@ Based on your chat history, these applications were requested:
    - Voice, video, and text chat
    - Installed via Snap
 
-8. **curl and wget** - Download utilities
+8. **Visual Studio Code** - Code editor
+   - Full-featured IDE
+   - Extensive extension support
+   - Installed via Snap
+
+9. **Cursor** - AI-powered code editor
+   - Fork of VS Code with AI capabilities
+   - Built-in AI assistant
+   - Installed via curl script
+
+10. **Moonlight** - Game streaming client
+   - Stream games from Sunshine server
+   - Low-latency remote gaming
+   - Installed via Snap
+
+10. **curl and wget** - Download utilities
    - Essential for downloading files from command line
 
 8. **Sunshine** - Game streaming server

@@ -40,7 +40,7 @@ cd ~/Desktop/linux-setup-package
 
 The script will:
 - ✓ Update your system
-- ✓ Install Nemo, Nautilus, Remmina, VLC, Extension Manager, GitHub Desktop, Claude Code CLI, Flameshot, Discord
+- ✓ Install Nemo, Nautilus, Remmina, VLC, Extension Manager, GitHub Desktop, Claude Code CLI, VS Code, Cursor, Flameshot, Discord, Moonlight
 - ✓ Install curl and wget
 - ✓ Optionally install CUDA Toolkit, gcc, cmake, htop, nvtop
 - ✓ Configure Samba network drives
