@@ -1,0 +1,132 @@
+================================================================================
+    LINUX SETUP INSTALLATION CHECKLIST
+================================================================================
+
+Date: __________  Target PC: _________________________
+
+PRE-INSTALLATION
+--------------------------------------------------------------------------------
+[ ] Fresh Ubuntu 24.04 installation complete
+[ ] Network connectivity verified
+[ ] Samba server (192.168.0.3) is accessible
+[ ] Windows drives are connected (if dual-boot)
+[ ] This package copied to ~/Desktop/
+
+OPTIONAL: COLLECT ADDITIONAL FILES (on current PC)
+--------------------------------------------------------------------------------
+[ ] Run: cd ~/Desktop/linux-setup-package
+[ ] Run: ./collect-scripts.sh
+[ ] Download Sunshine: wget [URL] -O sunshine.deb
+
+RUNNING THE INSTALLER
+--------------------------------------------------------------------------------
+[ ] Open terminal
+[ ] Navigate: cd ~/Desktop/linux-setup-package
+[ ] Run: ./install.sh
+[ ] Follow prompts:
+    Samba server IP: _________________ (default: 192.168.0.3)
+    Configure Windows drives? [ ] Yes [ ] No
+    Windows SSD UUID: _______________________________________
+    Games drive UUID: _______________________________________
+[ ] Installation completed without errors
+
+POST-INSTALLATION
+--------------------------------------------------------------------------------
+[ ] Reboot system
+[ ] After reboot, verify mounts:
+    [ ] ls /mnt/samba/Ubuntu-Root
+    [ ] ls /mnt/samba/AI-M2-2TB
+    [ ] ls /mnt/samba/MISC-M2-4TB
+    [ ] ls /mnt/samba/T9
+    [ ] ls /mnt/samba/Training
+    [ ] ls /mnt/samba/Desktop
+    [ ] ls /mnt/windows/Windows-SSD
+    [ ] ls /mnt/windows/Games
+[ ] Check file manager bookmarks (Nemo/Nautilus sidebar)
+
+GNOME EXTENSIONS (install via Extension Manager)
+--------------------------------------------------------------------------------
+Essential:
+[ ] App Indicator Support
+[ ] Tiling Assistant
+
+Choose One Dock/Panel:
+[ ] Dash to Dock (macOS-like)
+[ ] Dash to Panel (Windows-like)
+
+Optional:
+[ ] Desktop Icons NG (DING)
+[ ] Workspace Indicator
+[ ] Extension List
+[ ] Show Desktop Applet
+[ ] Places Menu
+[ ] EasyScreenCast
+[ ] Auto Move Windows
+
+APPLICATION CONFIGURATION
+--------------------------------------------------------------------------------
+[ ] Remmina: Add RDP/VNC connections
+    Connection 1: ___________________
+    Connection 2: ___________________
+    Connection 3: ___________________
+
+[ ] Sunshine: Configure streaming
+    [ ] Set PIN: ________
+    [ ] Configure resolution/bitrate
+    [ ] Test connection from client
+
+[ ] VLC: Test media playback
+[ ] Nemo: Test right-click context menu actions
+
+OPTIONAL DEPENDENCIES
+--------------------------------------------------------------------------------
+For Nemo Actions:
+[ ] VS Code: sudo snap install code --classic
+[ ] Cursor: Download from https://cursor.sh/
+[ ] llama.cpp: Build from source for GGUF merging
+
+For Chown Action:
+[ ] Configure passwordless sudo:
+    echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/chown" | sudo tee /etc/sudoers.d/nemo-chown
+    sudo chmod 440 /etc/sudoers.d/nemo-chown
+
+VERIFICATION
+--------------------------------------------------------------------------------
+[ ] All Samba shares accessible
+[ ] All Windows drives accessible
+[ ] Nemo actions appear in right-click menu
+[ ] GNOME extensions active and working
+[ ] Remmina connections working
+[ ] Sunshine streaming working (if configured)
+
+TROUBLESHOOTING NOTES
+--------------------------------------------------------------------------------
+Issue: ________________________________________________________________
+
+Solution: _____________________________________________________________
+
+_______________________________________________________________________
+
+Issue: ________________________________________________________________
+
+Solution: _____________________________________________________________
+
+_______________________________________________________________________
+
+FINAL NOTES
+--------------------------------------------------------------------------------
+Installation completed by: _____________________  Date: ___________
+
+Time taken: ___________
+
+Any issues or modifications needed: ___________________________________
+
+_______________________________________________________________________
+
+_______________________________________________________________________
+
+_______________________________________________________________________
+
+================================================================================
+For detailed help, see README.md and QUICKSTART.md
+================================================================================

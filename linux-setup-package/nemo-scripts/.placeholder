@@ -1,0 +1,5 @@
+Place your Nemo context menu scripts in this directory.
+
+Run ./collect-scripts.sh to automatically gather them from your existing Ubuntu installation.
+
+Scripts should be executable (chmod +x) and will appear in the Nemo right-click menu.

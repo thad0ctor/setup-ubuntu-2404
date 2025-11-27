@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Make Symlink Here
+Comment=Create a symbolic link in this folder to the selected file or directory
+Exec=sh -c 'cd "$(dirname "%F")" && ln -s "$(basename "%F")" "$(basename "%F")_symlink"'
+Icon=emblem-symbolic-link
+Selection=any
+Extensions=any;

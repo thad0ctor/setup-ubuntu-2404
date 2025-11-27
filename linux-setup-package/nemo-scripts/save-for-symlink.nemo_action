@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Save for Symlink
+Comment=Save this file/folder to create a symlink elsewhere
+Exec=$HOME/.local/bin/save-for-symlink.sh %F
+Icon=bookmark-new
+Selection=any
+Extensions=any;

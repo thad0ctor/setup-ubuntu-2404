@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Open in Cursor
+Comment=Open this folder in Cursor
+Exec=$HOME/.local/bin/launch-cursor.sh %F
+Icon=utilities-terminal
+Selection=any
+Extensions=dir;

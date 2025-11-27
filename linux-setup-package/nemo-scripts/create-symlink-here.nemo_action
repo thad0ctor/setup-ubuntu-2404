@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Create Symlink Here
+Comment=Create a symlink here from previously saved file/folder
+Exec=$HOME/.local/bin/create-symlink-here.sh %F
+Icon=emblem-symbolic-link
+Selection=any
+Extensions=any;

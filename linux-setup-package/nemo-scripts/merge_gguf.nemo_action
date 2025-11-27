@@ -1,0 +1,9 @@
+[Nemo Action]
+Active=true
+Name=Merge GGUF shards (terminal with output)
+Comment=Merge selected .gguf shards using llama.cpp
+Exec=gnome-terminal -- bash -c "$HOME/.local/bin/merge_gguf.sh %F; echo; echo '🟢 Merge complete. Press Enter to close…'; read"
+Icon-Name=document-merge
+Selection=Any
+Extensions=gguf;
+Quote=double

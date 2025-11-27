@@ -1,0 +1,13 @@
+[Nemo Action]
+Name=Claude Here (skip)
+Comment=Run Claude Code CLI with --dangerously-skip-permissions in this directory
+# %P = current path when nothing is selected (normal "background" click)
+#      If you invoke the action on a specific directory icon,
+#      %P still resolves to that directory.
+Exec=gnome-terminal --working-directory=%P -- bash -ic "claude --dangerously-skip-permissions; exec bash"
+Icon=utilities-terminal
+# Show even when nothing is selected
+Selection=none
+# Only show on directories / folder background, not on single files
+Extensions=dir;inode/directory;
+Terminal=false

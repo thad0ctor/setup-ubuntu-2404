@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Change Owner Recursively
+Comment=Change ownership of directory and all contents to current user
+Exec=<chown-recursive.sh %F>
+Icon-Name=folder-lock
+Selection=s
+Extensions=dir;

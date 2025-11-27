@@ -1,0 +1,8 @@
+[Nemo Action]
+Name=Copy File Path
+Label=📋 Copy Full Path
+Comment=Copy the full file path to clipboard
+Exec=sh -c 'echo -n "%F" | xclip -selection clipboard'
+Icon=edit-copy
+Selection=any
+Extensions=any;

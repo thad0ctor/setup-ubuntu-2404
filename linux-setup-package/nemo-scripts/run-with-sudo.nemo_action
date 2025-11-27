@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Run with sudo in Terminal
+Comment=Run this script with sudo and keep terminal open
+Exec=$HOME/.local/bin/sudo-runner.sh %F
+Icon=utilities-terminal
+Selection=s
+Extensions=sh;py;
