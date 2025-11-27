@@ -5,7 +5,7 @@
 # - Samba network drive mounts
 # - Windows NTFS drive mounts
 # - File manager bookmarks
-# - Essential applications (Remmina, VLC, VS Code, Cursor, Sunshine, Moonlight, Extension Manager)
+# - Essential applications (Remmina, VLC, VS Code, Cursor, Joplin, Sunshine, Moonlight, Extension Manager)
 # - Nemo and Nautilus file managers with extensions
 # - GNOME Shell extensions
 # - Nemo context menu scripts
@@ -109,6 +109,9 @@ sudo snap install --classic code || print_warning "Failed to install VS Code, co
 print_status "Installing Cursor AI Editor..."
 curl -fsS https://cursor.com/install | bash || print_warning "Failed to install Cursor, continuing..."
 
+print_status "Installing Joplin (note-taking app)..."
+wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash || print_warning "Failed to install Joplin, continuing..."
+
 print_status "Installing CIFS utilities for Samba mounting..."
 sudo apt install -y cifs-utils || print_warning "Failed to install CIFS utilities, continuing..."
 
@@ -119,6 +122,20 @@ sudo apt install -y ntfs-3g || print_warning "Failed to install NTFS support, co
 if [ -f "$SCRIPT_DIR/sunshine.deb" ]; then
     print_status "Installing Sunshine from local package..."
     sudo dpkg -i "$SCRIPT_DIR/sunshine.deb" || sudo apt --fix-broken install -y
+
+    # Configure Sunshine to restart every hour (prevents memory leaks)
+    print_status "Configuring Sunshine auto-restart (hourly)..."
+    mkdir -p ~/.config/systemd/user/sunshine.service.d
+    cat > ~/.config/systemd/user/sunshine.service.d/restart.conf <<'EOF'
+[Service]
+Restart=always
+RestartSec=10
+RuntimeMaxSec=3600
+EOF
+
+    # Reload systemd user daemon
+    systemctl --user daemon-reload || print_warning "Failed to reload systemd user daemon, continuing..."
+    print_success "Sunshine configured to restart every hour"
 else
     print_warning "Sunshine package not found. You'll need to download and install it separately."
     print_warning "Visit: https://github.com/LizardByte/Sunshine/releases"
@@ -413,7 +430,7 @@ print_status "Installation complete!"
 echo ""
 print_success "Summary of what was configured:"
 echo "  ✓ File managers: Nemo and Nautilus with extensions"
-echo "  ✓ Applications: Remmina, VLC, Extension Manager, GitHub Desktop, Claude Code CLI, VS Code, Cursor, Flameshot, Discord, Moonlight"
+echo "  ✓ Applications: Remmina, VLC, Extension Manager, GitHub Desktop, Claude Code CLI, VS Code, Cursor, Joplin, Flameshot, Discord, Moonlight"
 if [[ "$INSTALL_CUDA" =~ ^[Yy]$ ]]; then
 echo "  ✓ Development tools: gcc, cmake, build-essential"
 echo "  ✓ System monitoring: htop, nvtop"

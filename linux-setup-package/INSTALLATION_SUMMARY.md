@@ -76,7 +76,12 @@ Based on your chat history, these applications were requested:
    - Built-in AI assistant
    - Installed via curl script
 
-10. **Moonlight** - Game streaming client
+10. **Joplin** - Note-taking application
+   - Open-source note-taking and to-do app
+   - Supports markdown and sync
+   - Installed via official install script
+
+11. **Moonlight** - Game streaming client
    - Stream games from Sunshine server
    - Low-latency remote gaming
    - Installed via Snap

@@ -13,15 +13,28 @@ All notable changes to this linux-setup-package.
   - Fork of VS Code with built-in AI capabilities
   - Automatic installation via official install script
 
+- **Joplin** - Note-taking application
+  - Open-source note-taking and to-do application
+  - Supports markdown, sync, and encryption
+  - Automatic installation via official install script
+
 - **Moonlight** - Game streaming client
   - Stream games from Sunshine or other compatible servers
   - Low-latency remote gaming experience
   - Installed via Snap
 
+- **Sunshine Auto-Restart Configuration**
+  - Automatically restarts Sunshine every hour
+  - Prevents memory leaks and connection issues
+  - Uses systemd drop-in override (RuntimeMaxSec=3600)
+
 ### Changed
 - Updated all documentation to reflect new applications
 - Enhanced error handling throughout install.sh
 - Script now continues on individual package failures
+
+### Fixed
+- Removed hardcoded username path in merge_gguf.sh (now uses $HOME)
 
 ## [1.1.0] - 2025-11-26
 

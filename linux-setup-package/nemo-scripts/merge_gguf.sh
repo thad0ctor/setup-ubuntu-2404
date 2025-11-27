@@ -3,7 +3,7 @@
 # 2025-07-06  – tested on Ubuntu 24.04 + llama.cpp HEAD
 set -euo pipefail
 
-MERGER="/home/rgilbreth/Desktop/llama.cpp/build/bin/llama-gguf-split"
+MERGER="$HOME/Desktop/llama.cpp/build/bin/llama-gguf-split"
 
 ###############################################################################
 # 0. Preconditions

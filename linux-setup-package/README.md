@@ -24,11 +24,13 @@ This package contains everything you need to recreate your Linux installation se
    - Claude Code CLI (AI coding assistant)
    - Visual Studio Code (code editor)
    - Cursor (AI-powered code editor)
+   - Joplin (note-taking and to-do application)
    - Flameshot (screenshot tool)
    - Discord (communication platform)
    - Moonlight (game streaming client)
    - curl and wget (download utilities)
    - Sunshine (if sunshine.deb is present in this package)
+     - Includes auto-restart configuration (hourly) to prevent memory leaks
 
 3. **Development Tools (Optional)**
    - gcc, g++, make, cmake, build-essential
