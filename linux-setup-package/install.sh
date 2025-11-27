@@ -79,20 +79,37 @@ sudo apt install -y vlc || print_warning "Failed to install VLC, continuing..."
 print_status "Installing GNOME Extension Manager..."
 sudo apt install -y gnome-shell-extension-manager || print_warning "Failed to install Extension Manager, continuing..."
 
+print_status "Installing GNOME browser connector and extension prefs..."
+sudo apt install -y gnome-browser-connector gnome-shell-extension-prefs || print_warning "Failed to install GNOME browser connector, continuing..."
+
 print_status "Installing curl and wget..."
 sudo apt install -y curl wget || print_warning "Failed to install curl/wget, continuing..."
 
 print_status "Installing GitHub Desktop..."
-if wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null; then
-    sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ stable main" > /etc/apt/sources.list.d/shiftkey-packages.list'
-    sudo apt update || true
-    sudo apt install -y github-desktop || print_warning "Failed to install GitHub Desktop, continuing..."
+# Download the .deb directly from GitHub releases (more reliable than shiftkey apt repo)
+GITHUB_DESKTOP_URL=$(curl -s https://api.github.com/repos/shiftkey/desktop/releases/latest | grep "browser_download_url.*amd64\.deb" | head -1 | cut -d '"' -f 4)
+if [ -n "$GITHUB_DESKTOP_URL" ]; then
+    wget -q -O /tmp/github-desktop.deb "$GITHUB_DESKTOP_URL" && \
+    sudo dpkg -i /tmp/github-desktop.deb && \
+    sudo apt --fix-broken install -y && \
+    rm -f /tmp/github-desktop.deb && \
+    print_success "GitHub Desktop installed" || print_warning "Failed to install GitHub Desktop, continuing..."
 else
-    print_warning "Failed to add GitHub Desktop repository, continuing..."
+    print_warning "Failed to get GitHub Desktop download URL, continuing..."
 fi
+# Clean up any broken shiftkey repo that might have been added previously
+sudo rm -f /etc/apt/sources.list.d/shiftkey-packages.list 2>/dev/null || true
 
 print_status "Installing Claude Code CLI..."
 curl -fsSL https://claude.ai/install.sh | bash || print_warning "Failed to install Claude Code CLI, continuing..."
+
+# Ensure ~/.local/bin is in PATH for Claude Code and Cursor
+if ! grep -q 'export PATH="\$HOME/.local/bin:\$PATH"' ~/.bashrc 2>/dev/null; then
+    print_status "Adding ~/.local/bin to PATH..."
+    echo '' >> ~/.bashrc
+    echo '# Add local bin to PATH (for Claude Code, Cursor, etc.)' >> ~/.bashrc
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+fi
 
 print_status "Installing Flameshot (screenshot tool)..."
 sudo apt install -y flameshot || print_warning "Failed to install Flameshot, continuing..."
@@ -110,6 +127,11 @@ print_status "Installing Cursor AI Editor..."
 curl -fsS https://cursor.com/install | bash || print_warning "Failed to install Cursor, continuing..."
 
 print_status "Installing Joplin (note-taking app)..."
+# Joplin AppImage requires libfuse2 on Ubuntu 22.04+
+if ! dpkg -l libfuse2 2>/dev/null | grep -q "^ii"; then
+    print_status "Installing libfuse2 (required for Joplin AppImage)..."
+    sudo apt install -y libfuse2 || print_warning "Failed to install libfuse2, Joplin may not work..."
+fi
 wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash || print_warning "Failed to install Joplin, continuing..."
 
 print_status "Installing CIFS utilities for Samba mounting..."
@@ -178,8 +200,11 @@ if [[ "$INSTALL_CUDA" =~ ^[Yy]$ ]]; then
         sudo apt-get install -y cuda-toolkit-13-0 || print_warning "Failed to install CUDA Toolkit, continuing..."
 
         # Install NVIDIA open kernel modules
+        # Fix potential dpkg conflicts by configuring pending packages first
         print_status "Installing NVIDIA open kernel modules..."
-        sudo apt-get install -y nvidia-open || print_warning "Failed to install NVIDIA open modules, continuing..."
+        sudo dpkg --configure -a 2>/dev/null || true
+        # Force overwrite conflicting files if needed
+        sudo apt-get install -y -o Dpkg::Options::="--force-overwrite" nvidia-open || print_warning "Failed to install NVIDIA open modules, continuing..."
     fi
 
     # Add CUDA to PATH
@@ -357,13 +382,13 @@ print_status "Installing Nautilus scripts..."
 mkdir -p ~/.local/share/nautilus/scripts
 
 # Copy scripts from package
-if [ -d "$SCRIPT_DIR/nautilus-scripts" ] && [ "$(ls -A $SCRIPT_DIR/nautilus-scripts)" ]; then
+if [ -d "$SCRIPT_DIR/nautilus-scripts" ] && [ "$(ls -A $SCRIPT_DIR/nautilus-scripts 2>/dev/null)" ]; then
     print_status "Copying Nautilus scripts..."
-    cp -r "$SCRIPT_DIR/nautilus-scripts/"* ~/.local/share/nautilus/scripts/
-    chmod +x ~/.local/share/nautilus/scripts/*
+    cp -r "$SCRIPT_DIR/nautilus-scripts/"* ~/.local/share/nautilus/scripts/ 2>/dev/null || true
+    chmod +x ~/.local/share/nautilus/scripts/* 2>/dev/null || true
     print_success "Nautilus scripts installed"
 else
-    print_warning "No Nautilus scripts found in package."
+    print_status "No Nautilus scripts found in package (this is optional)."
 fi
 
 echo ""
@@ -400,25 +425,63 @@ echo ""
 # 8. INSTALL GNOME EXTENSIONS
 #######################################
 
-print_status "GNOME Extensions information..."
+print_status "Installing GNOME Shell extensions..."
 
-print_warning "The following GNOME extensions were detected on your original system:"
-echo "  - appindicatorsupport@rgcjonas.gmail.com"
-echo "  - dash-to-dock@micxgx.gmail.com"
-echo "  - dash-to-panel@jderose9.github.com"
-echo "  - EasyScreenCast@iacopodeenosee.gmail.com"
-echo "  - extension-list@tu.berry"
-echo "  - show-desktop-applet@valent-in"
-echo "  - tiling-assistant@ubuntu.com (Ubuntu default)"
-echo "  - ding@rastersoft.com (Ubuntu default)"
-echo ""
+# Install pipx if not present
+if ! command -v pipx &> /dev/null; then
+    print_status "Installing pipx..."
+    sudo apt install -y pipx || print_warning "Failed to install pipx, continuing..."
+    pipx ensurepath
+    export PATH="$HOME/.local/bin:$PATH"
+fi
 
-print_status "You can install these extensions using GNOME Extension Manager:"
-print_status "1. Open 'Extension Manager' from your applications"
-print_status "2. Search for and install the extensions listed above"
-print_status "3. Enable them in the Extension Manager"
-echo ""
-print_status "Alternatively, visit: https://extensions.gnome.org/"
+# Install gnome-extensions-cli
+print_status "Installing gnome-extensions-cli..."
+pipx install gnome-extensions-cli 2>/dev/null || pipx upgrade gnome-extensions-cli 2>/dev/null || print_warning "Failed to install gnome-extensions-cli"
+
+# Ensure gext is available
+export PATH="$HOME/.local/bin:$PATH"
+
+if command -v gext &> /dev/null; then
+    print_status "Installing GNOME extensions (this may take a moment)..."
+
+    # List of extensions to install (non-Ubuntu-default ones)
+    EXTENSIONS=(
+        "appindicatorsupport@rgcjonas.gmail.com"
+        "dash-to-dock@micxgx.gmail.com"
+        "dash-to-panel@jderose9.github.com"
+        "EasyScreenCast@iacopodeenosee.gmail.com"
+        "extension-list@tu.berry"
+        "show-desktop-applet@valent-in"
+        "workspace-indicator@gnome-shell-extensions.gcampax.github.com"
+        "places-menu@gnome-shell-extensions.gcampax.github.com"
+        "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
+        "docker@stickman_0x00.com"
+    )
+
+    for ext in "${EXTENSIONS[@]}"; do
+        print_status "Installing extension: $ext"
+        gext install "$ext" 2>/dev/null && print_success "Installed $ext" || print_warning "Failed to install $ext (may not be compatible with your GNOME version)"
+    done
+
+    print_success "GNOME extensions installation complete"
+    print_warning "You may need to log out and log back in to see all extensions"
+    print_status "Use Extension Manager to enable/configure extensions"
+else
+    print_warning "gnome-extensions-cli not available. Install extensions manually:"
+    echo "  - appindicatorsupport@rgcjonas.gmail.com"
+    echo "  - dash-to-dock@micxgx.gmail.com"
+    echo "  - dash-to-panel@jderose9.github.com"
+    echo "  - EasyScreenCast@iacopodeenosee.gmail.com"
+    echo "  - extension-list@tu.berry"
+    echo "  - show-desktop-applet@valent-in"
+    echo "  - workspace-indicator@gnome-shell-extensions.gcampax.github.com"
+    echo "  - places-menu@gnome-shell-extensions.gcampax.github.com"
+    echo "  - auto-move-windows@gnome-shell-extensions.gcampax.github.com"
+    echo "  - docker@stickman_0x00.com"
+    echo ""
+    print_status "Use Extension Manager or visit: https://extensions.gnome.org/"
+fi
 
 echo ""
 
