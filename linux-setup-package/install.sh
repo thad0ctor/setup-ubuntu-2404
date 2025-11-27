@@ -145,19 +145,43 @@ if [ -f "$SCRIPT_DIR/sunshine.deb" ]; then
     print_status "Installing Sunshine from local package..."
     sudo dpkg -i "$SCRIPT_DIR/sunshine.deb" || sudo apt --fix-broken install -y
 
+    # Enable Sunshine to start automatically on login
+    print_status "Enabling Sunshine auto-start on login..."
+    systemctl --user enable sunshine || print_warning "Failed to enable Sunshine auto-start, continuing..."
+
     # Configure Sunshine to restart every hour (prevents memory leaks)
-    print_status "Configuring Sunshine auto-restart (hourly)..."
-    mkdir -p ~/.config/systemd/user/sunshine.service.d
-    cat > ~/.config/systemd/user/sunshine.service.d/restart.conf <<'EOF'
+    print_status "Configuring Sunshine hourly restart timer..."
+    mkdir -p ~/.config/systemd/user
+
+    # Create the restart service
+    cat > ~/.config/systemd/user/sunshine-restart.service <<'EOF'
+[Unit]
+Description=Restart Sunshine service
+
 [Service]
-Restart=always
-RestartSec=10
-RuntimeMaxSec=3600
+Type=oneshot
+ExecStart=/usr/bin/systemctl --user restart sunshine.service
 EOF
 
-    # Reload systemd user daemon
+    # Create the hourly timer
+    cat > ~/.config/systemd/user/sunshine-restart.timer <<'EOF'
+[Unit]
+Description=Restart Sunshine every hour
+
+[Timer]
+OnBootSec=1h
+OnUnitActiveSec=1h
+Unit=sunshine-restart.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
+    # Reload systemd user daemon and enable the timer
     systemctl --user daemon-reload || print_warning "Failed to reload systemd user daemon, continuing..."
-    print_success "Sunshine configured to restart every hour"
+    systemctl --user enable sunshine-restart.timer || print_warning "Failed to enable Sunshine restart timer, continuing..."
+
+    print_success "Sunshine configured to auto-start and restart every hour"
 else
     print_warning "Sunshine package not found. You'll need to download and install it separately."
     print_warning "Visit: https://github.com/LizardByte/Sunshine/releases"
