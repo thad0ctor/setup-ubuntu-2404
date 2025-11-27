@@ -351,11 +351,21 @@ if [ -d "$SCRIPT_DIR/nemo-scripts" ] && [ "$(ls -A $SCRIPT_DIR/nemo-scripts)" ];
         export PATH="$HOME/.local/bin:$PATH"
     fi
 
-    # Update merge_gguf.nemo_action to use ~/.local/bin instead of /bin
-    if [ -f ~/.local/share/nemo/actions/merge_gguf.nemo_action ]; then
-        sed -i 's|/bin/merge_gguf.sh|'$HOME'/.local/bin/merge_gguf.sh|g' ~/.local/share/nemo/actions/merge_gguf.nemo_action
-    fi
-
+    # Fix all nemo actions to use absolute paths instead of $HOME
+    # Nemo doesn't expand $HOME in .nemo_action files, so we need absolute paths
+    print_status "Fixing paths in Nemo action files..."
+    for action_file in ~/.local/share/nemo/actions/*.nemo_action; do
+        if [ -f "$action_file" ]; then
+            # Replace $HOME with actual home directory path
+            sed -i "s|\\\$HOME|$HOME|g" "$action_file"
+            # Fix any corrupted double-path patterns that may have occurred
+            sed -i "s|$HOME/.local$HOME/.local/bin/|$HOME/.local/bin/|g" "$action_file"
+            # Also fix any that use the old /bin path
+            sed -i "s|/bin/merge_gguf.sh|$HOME/.local/bin/merge_gguf.sh|g" "$action_file"
+            # Fix chown-recursive.nemo_action which uses <script> syntax
+            sed -i "s|<chown-recursive.sh %F>|$HOME/.local/bin/chown-recursive.sh %F|g" "$action_file"
+        fi
+    done
 
     print_success "Nemo actions and helper scripts installed"
 
