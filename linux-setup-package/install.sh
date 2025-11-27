@@ -85,6 +85,13 @@ sudo apt install -y gnome-browser-connector gnome-shell-extension-prefs || print
 print_status "Installing curl and wget..."
 sudo apt install -y curl wget || print_warning "Failed to install curl/wget, continuing..."
 
+print_status "Installing GitHub CLI (gh)..."
+sudo apt install -y gh || print_warning "Failed to install GitHub CLI, continuing..."
+
+print_status "Installing Git LFS..."
+sudo apt install -y git-lfs || print_warning "Failed to install Git LFS, continuing..."
+git lfs install || print_warning "Failed to initialize Git LFS, continuing..."
+
 print_status "Installing GitHub Desktop..."
 # Download the .deb directly from GitHub releases (more reliable than shiftkey apt repo)
 GITHUB_DESKTOP_URL=$(curl -s https://api.github.com/repos/shiftkey/desktop/releases/latest | grep "browser_download_url.*amd64\.deb" | head -1 | cut -d '"' -f 4)
@@ -527,7 +534,7 @@ print_status "Installation complete!"
 echo ""
 print_success "Summary of what was configured:"
 echo "  ✓ File managers: Nemo and Nautilus with extensions"
-echo "  ✓ Applications: Remmina, VLC, Extension Manager, GitHub Desktop, Claude Code CLI, VS Code, Cursor, Joplin, Flameshot, Discord, Moonlight"
+echo "  ✓ Applications: Remmina, VLC, Extension Manager, GitHub Desktop, gh, git-lfs, Claude Code CLI, VS Code, Cursor, Joplin, Flameshot, Discord, Moonlight"
 if [[ "$INSTALL_CUDA" =~ ^[Yy]$ ]]; then
 echo "  ✓ Development tools: gcc, cmake, build-essential"
 echo "  ✓ System monitoring: htop, nvtop"
@@ -550,6 +557,16 @@ echo "  2. Install GNOME extensions using Extension Manager"
 echo "  3. Configure Sunshine if needed: https://docs.lizardbyte.dev/projects/sunshine/"
 echo "  4. Verify all Samba drives are accessible after reboot"
 fi
+echo ""
+
+read -p "Would you like to authenticate with GitHub CLI now? (y/n): " GH_AUTH
+if [[ "$GH_AUTH" =~ ^[Yy]$ ]]; then
+    print_status "Starting GitHub CLI authentication..."
+    gh auth login
+else
+    print_status "You can authenticate later by running: gh auth login"
+fi
+
 echo ""
 
 read -p "Would you like to reboot now? (y/n): " REBOOT_NOW
