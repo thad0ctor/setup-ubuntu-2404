@@ -362,6 +362,11 @@ print_status "Installing Nemo context menu actions and scripts..."
 mkdir -p ~/.local/share/nemo/actions
 mkdir -p ~/.local/share/nemo/scripts
 
+# Set Nemo as the default file manager
+print_status "Setting Nemo as default file manager..."
+xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+print_success "Nemo set as default file manager"
+
 # Copy Nemo actions from package
 if [ -d "$SCRIPT_DIR/nemo-scripts" ] && [ "$(ls -A $SCRIPT_DIR/nemo-scripts)" ]; then
     print_status "Installing Nemo actions and helper scripts..."
