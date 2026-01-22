@@ -1,0 +1,8 @@
+[Nemo Action]
+Name=Codex here
+Comment=Run Codex CLI in this directory
+Exec=gnome-terminal --working-directory=%P -- bash -ic "codex; exec bash"
+Icon=utilities-terminal
+Selection=none
+Extensions=dir;inode/directory;
+Terminal=false

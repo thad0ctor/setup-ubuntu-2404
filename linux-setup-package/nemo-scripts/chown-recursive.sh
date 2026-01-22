@@ -3,16 +3,16 @@
 # Nemo action script to recursively change ownership to current user
 # Usage: chown-recursive.sh <directory_path>
 
-TARGET_DIR="$1"
+# $1 = selected file/dir (%F), $2 = current directory (%P)
+if [ -n "$1" ] && [ -d "$1" ]; then
+    TARGET_DIR="$1"
+else
+    TARGET_DIR="$2"
+fi
 CURRENT_USER=$(whoami)
 
-if [ -z "$TARGET_DIR" ]; then
-    zenity --error --text="No directory specified"
-    exit 1
-fi
-
-if [ ! -d "$TARGET_DIR" ]; then
-    zenity --error --text="'$TARGET_DIR' is not a directory"
+if [ -z "$TARGET_DIR" ] || [ ! -d "$TARGET_DIR" ]; then
+    zenity --error --text="No valid directory specified"
     exit 1
 fi
 

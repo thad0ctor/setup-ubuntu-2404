@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Run in Terminal
+Comment=Run this script in terminal (no sudo)
+Exec=/home/rgilbreth/.local/bin/terminal-runner.sh %F
+Icon=utilities-terminal
+Selection=s
+Extensions=sh;py;

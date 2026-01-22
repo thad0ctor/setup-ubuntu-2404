@@ -1,0 +1,8 @@
+[Nemo Action]
+Name=Gemini here
+Comment=Run Gemini CLI in this directory
+Exec=gnome-terminal --working-directory=%P -- bash -ic "gemini; exec bash"
+Icon=utilities-terminal
+Selection=none
+Extensions=dir;inode/directory;
+Terminal=false
